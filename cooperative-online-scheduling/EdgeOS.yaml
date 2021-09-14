@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: sub-task3
+spec:
+  #schedulerName: foobar
+  containers:
+  - name: post-image
+    image: nvcr.io/nvidia/l4t-ml:r32.5.0-py3 #jermine/opencv:aarch64-ubuntu-3.4.1
+    imagePullPolicy: IfNotPresent
+    command: [ "/bin/bash", "-c" ]
+    args: [" pip3 install imutils; cd /EdgeOS; python3 k8s_task_3.py 1 ' ' '5 6' " ]
+    volumeMounts:
+    - mountPath: /EdgeOS
+      name: go-logs
+  volumes:
+  - name: go-logs
+    hostPath:
+      path: /home/edge/Documents/cs4365-task-offload-framework
+  nodeName: edgenx4
+  hostNetwork: true
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sub-task2
+spec:
+  #schedulerName: myscheduler
+  containers:
+  - name: dog-species
+    image: nvcr.io/nvidia/l4t-ml:r32.5.0-py3 #jermine/opencv:aarch64-ubuntu-3.4.1
+    imagePullPolicy: IfNotPresent
+    command: [ "/bin/bash", "-c" ]
+    args: [" pip3 install imutils; cd /EdgeOS; python3 k8s_task_2.py 1 '192.168.1.102' '3 4' " ]
+    volumeMounts:
+    - mountPath: /EdgeOS
+      name: go-logs
+  volumes:
+  - name: go-logs
+    hostPath:
+      path: /home/edge/Documents/cs4365-task-offload-framework
+  nodeName: edgenx1
+  hostNetwork: true
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sub-task1
+spec:
+  #schedulerName: myscheduler
+  containers:
+  - name: dog-species
+    image: nvcr.io/nvidia/l4t-ml:r32.5.0-py3 #jermine/opencv:aarch64-ubuntu-3.4.1
+    imagePullPolicy: IfNotPresent
+    command: [ "/bin/bash", "-c" ]
+    args: [" pip3 install imutils; cd /EdgeOS; python3 k8s_task_1.py 0 '192.168.1.104' '0 1 2' " ]
+    volumeMounts:
+    - mountPath: /EdgeOS
+      name: go-logs
+  volumes:
+  - name: go-logs
+    hostPath:
+      path: /home/edge/Documents/cs4365-task-offload-framework
+  nodeName: edgenx3
+  hostNetwork: true
