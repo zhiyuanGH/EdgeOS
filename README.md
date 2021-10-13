@@ -1,3 +1,3 @@
 # EdgeOS
 
-EdgeOS is and edge-native system designed and developed for joint edge resource management and distributed task execution. 
+EdgeOS is an edge-native system designed and developed for joint edge resource management and distributed task execution. 
