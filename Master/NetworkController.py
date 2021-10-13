@@ -33,7 +33,7 @@ def customize_routing(routing_list):
 	print(routing_list_json)
 	node_ip = routing_list_json["IP_table"]
 	for ip in node_ip:
-		url = "http://" + ip + ":5000/route"
+		url = "http://" + ip + ":5009/route"
 		respone = requests.post(url=url, json=routing_list_json)
 
 
@@ -174,9 +174,9 @@ bandwidth = {
 			"task_id": "0 1 2", 
 			"source_ip": "192.168.1.104", 
 			"source_ip_port": 8089, 
-			"next_hop": "192.168.1.104", 
+			"next_hop": "192.168.1.105", 
 			"next_hop_port": 8089, 
-			"bandwidth": "", 
+			"bandwidth": "10Mbit", 
 			"routing": ""
 			}
 
@@ -186,6 +186,6 @@ def limit_bandwidth(bandwidth):
 	print(limit_bandwidth_json)
 
 	node_ip = limit_bandwidth_json["source_ip"]
-	url = "http://" + node_ip + ":5000/bandwidth"
+	url = "http://" + node_ip + ":5009/bandwidth"
 	respone = requests.post(url=url, json=limit_bandwidth_json)
 
