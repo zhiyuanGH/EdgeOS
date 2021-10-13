@@ -124,7 +124,7 @@ def parse_args():
 		next_hop_port = int(para_4)
 
 	# Parse task_id_list  '0 1 2 3' -- [0 1 2 3]
-	para_5 = str(sys.argv[3])
+	para_5 = str(sys.argv[5])
 	list1=list(para_5.split())
 	task_id_list=list(map(int,list1))
 
