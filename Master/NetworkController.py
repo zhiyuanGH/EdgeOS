@@ -1,35 +1,46 @@
-'''
-input
- -task definition, which tasks the container should run
- -the offloading device
+import json
+import requests
 
-To run the task with the input configuration
-'''
 import pickle
 import socket
 import struct
 import threading
-import sys
 
-from ball_tracking_example.taskified import tasks
+config = {"IP": ["192.168.1.101", "192.168.1.105", "192.168.1.107", "192.168.1.102", "192.168.1.116"],
+"bw": [["inf", "4969kbps", "2096kbps", "3326kbps", "inf"],
+["3656kbps", "inf", "4091kbps", "None", "3971kbps"],
+["2996kbps", "3368kbps", "inf", "2683kbps", "None"],
+["3195kbps", "None", "4131kbps", "inf", "2295kbps"],
+["2395kbps", "4280kbps", "None", "3648kbps", "inf"]]}
+
+config_json = json.dumps(config)
+
+def configure_bandwidth():
+	tc_json = json.loads(config_json)
+	node_ip = tc_json["IP"]
+	for ip in node_ip:
+		url = "http://" + ip + ":5000/tcConf"
+		respone = requests.post(url=url, json=tc_json)
+		break
+
+#configure_bandwidth()
+
+routing_list = {"IP_table": ["192.168.1.104", "192.168.1.101", "192.168.1.105"]}
+
+def customize_routing(routing_list):
+	config_json = json.dumps(routing_list)
+	routing_list_json = json.loads(config_json)
+	print(routing_list_json)
+	node_ip = routing_list_json["IP_table"]
+	for ip in node_ip:
+		url = "http://" + ip + ":5000/route"
+		respone = requests.post(url=url, json=routing_list_json)
 
 
-
-def run_task(task_func, args):
-	#emulate_iot_device()
-
-	# Call task
-	if args is None:
-		# No args to pass
-		return task_func()
-	elif type(args) is tuple:
-		# Unzip tuple into args
-		return task_func(*args)
-	else:
-		# Single arg
-		return task_func(args)
+#customize_routing(routing_list)
 
 
+#transfer the out_data to next hop
 def offload_to_peer(next_task_num, next_task_args, client_socket):
 	send_data = b''
 	next_arg_data = []
@@ -57,6 +68,8 @@ def offload_to_peer(next_task_num, next_task_args, client_socket):
 	client_socket.sendall(send_data)
 
 
+
+#listen and receive the data from the previous hop
 def server_socket(s,next_client,task_id_list):
 
 	while True:
@@ -155,105 +168,24 @@ def server_task(conn,next_client, task_id_list):
 
 
 
-def main(previous_hop, next_hop, task_id_list):
-	#previous_hop, next_hop, task_id_list
 
-	if next_hop:
-		#establish next hop connection
-		client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		client_socket.connect((next_hop, next_hop_port))
+#limit the bandwidth of data transfering
+bandwidth = {
+			"task_id": "0 1 2", 
+			"source_ip": "192.168.1.104", 
+			"source_ip_port": 8089, 
+			"next_hop": "192.168.1.104", 
+			"next_hop_port": 8089, 
+			"bandwidth": "", 
+			"routing": ""
+			}
 
-	else:
-		client_socket = None
+def limit_bandwidth(bandwidth):
+	bandwidth_json = json.dumps(bandwidth)
+	limit_bandwidth_json = json.loads(bandwidth_json)
+	print(limit_bandwidth_json)
 
-	if previous_hop:
-		#establish previous hop connection and listen, run the assigned task and offload the task to next_hop
-		server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		print('Socket created')
-
-		server.bind((HOST, HOST_PORT))
-		print('Socket bind complete')
-		server.listen(10)
-		print('Socket now listening on port', HOST_PORT)
-
-		server_socket(s=server, next_client=client_socket, task_id_list=task_id_list)
-
-	else:
-		# Variables for task state
-		task_index = 0
-		# Init tasks args
-		next_task_args = None
-
-		# Keep running tasks in sequential order
-		while True:
-
-			# Determine which task to run
-			task = tasks[task_index]
-
-			# Run task
-			to_continue, next_task_args = run_task(task_func=task,
-												   args=next_task_args)
-
-			# No need to continue running tasks, end of stream
-			if to_continue is False and task_index == 0:
-				client_socket.close()
-				break
-
-			# Increment index (cyclical)
-			task_index += 1
-
-			# Reset to first frame if more function calls are not needed
-			# or reached end of sequence
-			if to_continue is False or task_index >= len(task_id_list):
-
-				if to_continue is not False and client_socket is not None:
-					# Send frame to peer server
-					offload_to_peer(next_task_num=task_index,
-									next_task_args=next_task_args,
-									client_socket=client_socket)
-
-				# Reset vars
-				task_index = 0
-				next_task_args = None
-				continue
-		
-def parse_args():
-
-	# Parse previous hop 1/0
-	para_1 = int(sys.argv[1])
-	if para_1 == 1:
-		previous_hop = True
-	if para_1 == 0:
-		previous_hop = False
-
-	# Parse next hop ip_address
-	para_2 = str(sys.argv[2])
-	if para_2 == ' ':
-		next_hop = False
-	else:
-		next_hop = para_2
-
-	# Parse task_id_list  '0 1 2 3' -- [0 1 2 3]
-	para_3 = str(sys.argv[3])
-	list1=list(para_3.split())
-	task_id_list=list(map(int,list1))
-
-	return previous_hop, next_hop, task_id_list
-
-HOST = 'localhost'
-HOST_PORT = 8089
-
-#previous_hop = False
-#next_hop = 'localhost'
-next_hop_port = 8089
-#task_id_list = [0,1,2]
-
-if __name__ == '__main__':
-	previous_hop, next_hop, task_id_list = parse_args()
-	print(previous_hop, next_hop, task_id_list)
-	main(previous_hop, next_hop, task_id_list)
-
-
-
-
+	node_ip = limit_bandwidth_json["source_ip"]
+	url = "http://" + node_ip + ":5000/bandwidth"
+	respone = requests.post(url=url, json=limit_bandwidth_json)
 

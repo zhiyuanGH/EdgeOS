@@ -1,0 +1,209 @@
+[
+    {
+        "id": "ab4770e85709d8d1",
+        "type": "tab",
+        "label": "task1",
+        "disabled": false,
+        "info": "[{\"next\":\"task2\"}]"
+    },
+    {
+        "id": "2a9cd0a09df4cc80",
+        "type": "tab",
+        "label": "task2",
+        "disabled": false,
+        "info": "[{\"next\":\"\"}]"
+    },
+    {
+        "id": "b7962d1d0e40a7ce",
+        "type": "inject",
+        "z": "ab4770e85709d8d1",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 100,
+        "wires": [
+            [
+                "2e10e57cb781ad0a"
+            ]
+        ]
+    },
+    {
+        "id": "2e10e57cb781ad0a",
+        "type": "exec",
+        "z": "ab4770e85709d8d1",
+        "command": "python3.7 /Users/zhiyuanhu/PycharmProjects/ball_tracking_example/task1.py",
+        "addpay": "",
+        "append": "hi",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "task1",
+        "x": 250,
+        "y": 280,
+        "wires": [
+            [
+                "f22471c259c0595a",
+                "4e20dd83e671f95b"
+            ],
+            [
+                "4e20dd83e671f95b"
+            ],
+            [
+                "4e20dd83e671f95b"
+            ]
+        ]
+    },
+    {
+        "id": "f22471c259c0595a",
+        "type": "file",
+        "z": "ab4770e85709d8d1",
+        "name": "output",
+        "filename": "/Users/zhiyuanhu/PycharmProjects/ball_tracking_example/task1.txt",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 530,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "79f6a813d5570da6",
+        "type": "inject",
+        "z": "2a9cd0a09df4cc80",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 180,
+        "wires": [
+            [
+                "c53b804420ce0b5d"
+            ]
+        ]
+    },
+    {
+        "id": "c53b804420ce0b5d",
+        "type": "file in",
+        "z": "2a9cd0a09df4cc80",
+        "name": "result of task1 as input",
+        "filename": "/Users/zhiyuanhu/PycharmProjects/ball_tracking_example/task1.txt",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 300,
+        "y": 180,
+        "wires": [
+            [
+                "ebc68c19fc56d870"
+            ]
+        ]
+    },
+    {
+        "id": "ebc68c19fc56d870",
+        "type": "exec",
+        "z": "2a9cd0a09df4cc80",
+        "command": "python3.7 /Users/zhiyuanhu/PycharmProjects/ball_tracking_example/task2.py",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "task2",
+        "x": 510,
+        "y": 180,
+        "wires": [
+            [
+                "db704e5603393107",
+                "d3d5c5d275d5bf2d"
+            ],
+            [
+                "db704e5603393107"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "db704e5603393107",
+        "type": "debug",
+        "z": "2a9cd0a09df4cc80",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "4e20dd83e671f95b",
+        "type": "debug",
+        "z": "ab4770e85709d8d1",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "d3d5c5d275d5bf2d",
+        "type": "file",
+        "z": "2a9cd0a09df4cc80",
+        "name": "output",
+        "filename": "/Users/zhiyuanhu/PycharmProjects/ball_tracking_example/task2.txt",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 720,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    }
+]

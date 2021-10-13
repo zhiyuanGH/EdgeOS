@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: sub-task3
+spec:
+  #schedulerName: myscheduler
+  containers:
+  - name: post-image
+    image: nvcr.io/nvidia/l4t-ml:r32.5.0-py3 #jermine/opencv:aarch64-ubuntu-3.4.1
+    imagePullPolicy: IfNotPresent
+    command: [ "/bin/bash", "-c" ]
+    args: [" pip3 install imutils; cd /EdgeOS; python3 arg1 arg2 arg3 arg4 " ]
+    volumeMounts:
+    - mountPath: /EdgeOS
+      name: go-logs
+  volumes:
+  - name: go-logs
+    hostPath:
+      path: /home/edge/Documents/cooperative-online-scheduling
+  hostNetwork: true
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sub-task2
+spec:
+  #schedulerName: myscheduler
+  containers:
+  - name: dog-species
+    image: nvcr.io/nvidia/l4t-ml:r32.5.0-py3 #jermine/opencv:aarch64-ubuntu-3.4.1
+    imagePullPolicy: IfNotPresent
+    command: [ "/bin/bash", "-c" ]
+    args: [" pip3 install imutils; cd /EdgeOS; python3 arg1 arg2 arg3 arg4 " ]
+    volumeMounts:
+    - mountPath: /EdgeOS
+      name: go-logs
+  volumes:
+  - name: go-logs
+    hostPath:
+      path: /home/edge/Documents/cooperative-online-scheduling
+  nodeName: edgenx1
+  hostNetwork: true
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sub-task1
+spec:
+  #schedulerName: myscheduler
+  containers:
+  - name: dog-species
+    image: nvcr.io/nvidia/l4t-ml:r32.5.0-py3 #jermine/opencv:aarch64-ubuntu-3.4.1
+    imagePullPolicy: IfNotPresent
+    command: [ "/bin/bash", "-c" ]
+    args: [" pip3 install imutils; cd /EdgeOS; python3 arg1 arg2 arg3 arg4 " ]
+    volumeMounts:
+    - mountPath: /EdgeOS
+      name: go-logs
+  volumes:
+  - name: go-logs
+    hostPath:
+      path: /home/edge/Documents/cooperative-online-scheduling
+  nodeName: edgenx3
+  hostNetwork: true

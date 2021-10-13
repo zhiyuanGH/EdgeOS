@@ -1,4 +1,0 @@
-'''
-generate the execution file
-'''
-

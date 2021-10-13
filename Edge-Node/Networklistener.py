@@ -107,6 +107,22 @@ def customize_routing(routing_path_list):
 	return 0
 
 
+def limit_bandwidth(limit_bandwidth_json):
+	'''
+	limit the bandwidth of data tranfer from a specific port
+	input: the json of the bandwidth related parameters
+	'''
+	cmd = []
+	cmd.append('sudo tc qdisc add dev wlan0 root handle 1:0 htb default 1')
+	cmd.append('sudo tc class add dev wlan0 parent 1:0 classid 1:1 htb rate 10Mbit burst 15k')
+	cmd.append('sudo tc class add dev wlan0 parent 1:1 classid 1:10 htb rate 10Mbit ceil 10Mbit burst 15k')
+	cmd.append('sudo tc filter add dev wlan0 protocol ip parent 1:0 prio 1 u32 match ip sport %d 0xffff flowid 1:10', % (limit_bandwidth_json["source_ip_port"]))
+
+	print(cmd)
+	configure(cmd)
+	
+
+
 
 #listen the confiuration and configure the network
 def device_conf_listener():
@@ -129,21 +145,18 @@ def device_conf_listener():
 
 		return "OK"
 
+	@app.route('/bandwidth', methods=['POST'])
+	def configure_bandwidth():
+		limit_bandwidth_json = request.get_json()
+		print(limit_bandwidth_json)
+
+		limit_bandwidth(limit_bandwidth_json)
+
+		return "OK"
+
 	app.run (host='0.0.0.0', port=5000)
 
 device_conf_listener()
-
-
-
-
-
-
-# def bandwidth_sharing(client_port, bandwidth):
-# 	'''
-# 	limit the bandwidth of data tranfer from a specific port
-# 	'''
-	
-# 	pass
 
 
 
