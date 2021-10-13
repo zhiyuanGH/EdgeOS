@@ -130,7 +130,7 @@ def parse_args():
 
 	return previous_hop, HOST_PORT, next_hop, next_hop_port, task_id_list
 
-HOST = 'localhost'
+HOST = '0.0.0.0'
 #HOST_PORT = 8089
 
 #previous_hop = False
