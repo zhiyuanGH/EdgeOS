@@ -6,6 +6,7 @@ import socket
 import struct
 import threading
 
+'''
 config = {"IP": ["192.168.1.104", "192.168.1.101", "192.168.1.105", "192.168.1.102"],
 "bw": [["inf", "4969kbps", "inf", "inf"],
 ["4969kbps", "inf", "4091kbps", "1024kbps"],
@@ -37,8 +38,8 @@ def customize_routing(routing_list):
 		respone = requests.post(url=url, json=routing_list_json)
 
 
-customize_routing(routing_list)
-
+#customize_routing(routing_list)
+'''
 
 #transfer the out_data to next hop
 def offload_to_peer(next_task_num, next_task_args, client_socket):
@@ -168,7 +169,7 @@ def server_task(conn,next_client, task_id_list):
 
 
 
-
+'''
 #limit the bandwidth of data transfering
 bandwidth = {
 			"task_id": "0 1 2", 
@@ -188,4 +189,7 @@ def limit_bandwidth(bandwidth):
 	node_ip = limit_bandwidth_json["source_ip"]
 	url = "http://" + node_ip + ":5009/bandwidth"
 	respone = requests.post(url=url, json=limit_bandwidth_json)
+
+#limit_bandwidth(bandwidth)
+'''
 
