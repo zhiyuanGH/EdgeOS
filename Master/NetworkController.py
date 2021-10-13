@@ -6,12 +6,11 @@ import socket
 import struct
 import threading
 
-config = {"IP": ["192.168.1.101", "192.168.1.105", "192.168.1.107", "192.168.1.102", "192.168.1.116"],
-"bw": [["inf", "4969kbps", "2096kbps", "3326kbps", "inf"],
-["3656kbps", "inf", "4091kbps", "None", "3971kbps"],
-["2996kbps", "3368kbps", "inf", "2683kbps", "None"],
-["3195kbps", "None", "4131kbps", "inf", "2295kbps"],
-["2395kbps", "4280kbps", "None", "3648kbps", "inf"]]}
+config = {"IP": ["192.168.1.104", "192.168.1.101", "192.168.1.105", "192.168.1.102"],
+"bw": [["inf", "4969kbps", "inf", "inf"],
+["4969kbps", "inf", "4091kbps", "1024kbps"],
+["2996kbps", "3368kbps", "inf", "4969bps"],
+["3195kbps", "inf", "4131kbps", "inf"]]}
 
 config_json = json.dumps(config)
 
@@ -21,7 +20,7 @@ def configure_bandwidth():
 	for ip in node_ip:
 		url = "http://" + ip + ":5000/tcConf"
 		respone = requests.post(url=url, json=tc_json)
-		break
+
 
 #configure_bandwidth()
 
