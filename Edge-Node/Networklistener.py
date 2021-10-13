@@ -82,12 +82,14 @@ def customize_routing(routing_path_list):
 
 	if order == 0:
 		cmd = 'sudo route add -host ' + routing_path_list[-1] + ' gw ' + routing_path_list[order+1]
+		print(cmd)
 		p = sp.Popen (cmd, stdout=sp.PIPE, stderr=sp.STDOUT, shell=True)
 		print (p.communicate () [0].decode ())
 		print ('if no error printed, then successfully configure next hop')
 		return 0
 
 	if order == len(routing_path_list) - 1:
+		print("received")
 		return 0
 
 	if order == len(routing_path_list) - 2:
@@ -96,6 +98,7 @@ def customize_routing(routing_path_list):
 		# p = sp.Popen (cmd, stdout=sp.PIPE, stderr=sp.STDOUT, shell=True)
 		# print (p.communicate () [0].decode ())
 		# print ('if no error printed, then successfully configure ip_forward')
+		print("received")
 		return 0
 
 	#cmd1 = 'echo "1" > /proc/sys/net/ipv4/ip_forward'

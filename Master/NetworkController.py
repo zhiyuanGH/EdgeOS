@@ -23,9 +23,9 @@ def configure_bandwidth():
 		break
 
 
-configure_bandwidth()
+#configure_bandwidth()
 
-routing_list = {"IP_table": ["192.168.1.104", "192.168.1.101", "192.168.1.105"]}
+routing_list = {"IP_table": ["192.168.1.101", "192.168.1.105", "192.168.1.102"]}
 
 def customize_routing(routing_list):
 	config_json = json.dumps(routing_list)
@@ -37,7 +37,7 @@ def customize_routing(routing_list):
 		respone = requests.post(url=url, json=routing_list_json)
 
 
-#customize_routing(routing_list)
+customize_routing(routing_list)
 
 
 #transfer the out_data to next hop
