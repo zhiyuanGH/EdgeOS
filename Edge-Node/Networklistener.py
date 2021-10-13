@@ -51,13 +51,13 @@ def test(config_json):
 	order = tc_ip.index(local_ip)
 	conf = tc_bw[order]
 	cmd = []
-	cmd.append('sudo tc qdisc add dev enp4s0 root handle 1: htb default 1')
+	cmd.append('sudo tc qdisc add dev wlan0 root handle 1: htb default 1')
 	for i in range(len(conf)):
 		ip = tc_ip[i]
 		bw = conf[i]
 		if bw != 'inf':
-			cmd.append('sudo tc class add dev enp4s0 parent 1:1 classid ' + '1:%d htb rate %s ceil %s burst 15k' % (i+10, bw, bw))
-			cmd.append('sudo tc filter add dev enp4s0 protocol ip parent 1: prio 2 u32 match ip dst ' + '%s/32 flowid 1:%d' % (ip, i+10))
+			cmd.append('sudo tc class add dev wlan0 parent 1:1 classid ' + '1:%d htb rate %s ceil %s burst 15k' % (i+10, bw, bw))
+			cmd.append('sudo tc filter add dev wlan0 protocol ip parent 1: prio 2 u32 match ip dst ' + '%s/32 flowid 1:%d' % (ip, i+10))
 	print(cmd)
 	configure(cmd)
 
@@ -132,7 +132,9 @@ def device_conf_listener():
 	def route_tc_conf ():
 		config_json = request.get_json()
 		print(config_json)
-		#test(config_json)
+
+		test(config_json)
+
 		return "OK"
 
 	@app.route('/route', methods=['POST'])

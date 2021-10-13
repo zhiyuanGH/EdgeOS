@@ -18,11 +18,12 @@ def configure_bandwidth():
 	tc_json = json.loads(config_json)
 	node_ip = tc_json["IP"]
 	for ip in node_ip:
-		url = "http://" + ip + ":5000/tcConf"
+		url = "http://" + ip + ":5009/tcConf"
 		respone = requests.post(url=url, json=tc_json)
+		break
 
 
-#configure_bandwidth()
+configure_bandwidth()
 
 routing_list = {"IP_table": ["192.168.1.104", "192.168.1.101", "192.168.1.105"]}
 
