@@ -12,23 +12,9 @@ import threading
 import sys
 
 from ball_tracking_example.taskified import tasks
-from NetworkController import offload_to_peer, server_socket
+from NetworkController import offload_to_peer, server_socket, run_task
 
 
-
-def run_task(task_func, args):
-	#emulate_iot_device()
-
-	# Call task
-	if args is None:
-		# No args to pass
-		return task_func()
-	elif type(args) is tuple:
-		# Unzip tuple into args
-		return task_func(*args)
-	else:
-		# Single arg
-		return task_func(args)
 
 
 def main(previous_hop, HOST_PORT, next_hop, next_hop_port, task_id_list):

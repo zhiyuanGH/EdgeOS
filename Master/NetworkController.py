@@ -43,6 +43,20 @@ def customize_routing(routing_list):
 #customize_routing(routing_list)
 '''
 
+def run_task(task_func, args):
+	#emulate_iot_device()
+
+	# Call task
+	if args is None:
+		# No args to pass
+		return task_func()
+	elif type(args) is tuple:
+		# Unzip tuple into args
+		return task_func(*args)
+	else:
+		# Single arg
+		return task_func(args)
+
 #transfer the out_data to next hop
 def offload_to_peer(next_task_num, next_task_args, client_socket):
 	send_data = b''
