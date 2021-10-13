@@ -41,7 +41,8 @@ def configure(cmd):
 
 
 def test(config_json):
-	tc_json = json.loads(config_json)
+	#tc_json = json.loads(config_json)
+	tc_json = config_json
 	tc_ip = tc_json["IP"]
 	tc_bw = tc_json["bw"]
 	print(tc_ip)
