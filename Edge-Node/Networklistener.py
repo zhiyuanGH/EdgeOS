@@ -116,7 +116,7 @@ def limit_bandwidth(limit_bandwidth_json):
 	cmd.append('sudo tc qdisc add dev wlan0 root handle 1:0 htb default 1')
 	cmd.append('sudo tc class add dev wlan0 parent 1:0 classid 1:1 htb rate 10Mbit burst 15k')
 	cmd.append('sudo tc class add dev wlan0 parent 1:1 classid 1:10 htb rate 10Mbit ceil 10Mbit burst 15k')
-	cmd.append('sudo tc filter add dev wlan0 protocol ip parent 1:0 prio 1 u32 match ip sport %d 0xffff flowid 1:10', % (limit_bandwidth_json["source_ip_port"]))
+	cmd.append('sudo tc filter add dev wlan0 protocol ip parent 1:0 prio 1 u32 match ip sport %d 0xffff flowid 1:10' % (limit_bandwidth_json["source_ip_port"]))
 
 	print(cmd)
 	configure(cmd)
