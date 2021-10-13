@@ -154,7 +154,7 @@ def device_conf_listener():
 
 		return "OK"
 
-	app.run (host='0.0.0.0', port=5000)
+	app.run (host='0.0.0.0', port=5001)
 
 device_conf_listener()
 
