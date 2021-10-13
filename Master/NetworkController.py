@@ -5,6 +5,8 @@ import pickle
 import socket
 import struct
 import threading
+import sys
+from ball_tracking_example.taskified import tasks
 
 '''
 config = {"IP": ["192.168.1.104", "192.168.1.101", "192.168.1.105", "192.168.1.102"],
