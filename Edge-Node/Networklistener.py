@@ -35,8 +35,7 @@ def get_host_ip():
 def configure(cmd):
 	for c in cmd:
 		p = sp.Popen (c, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT, shell=True)
-		p.communicate(input=b'edgeimcl\n')
-		print (p.communicate () [0].decode ())
+		print (p.communicate (input=b'edgeimcl\n') [0].decode ())
 		print ('if no error printed, then successfully configure the network bandwidth')
 
 
