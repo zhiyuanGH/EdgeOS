@@ -8,7 +8,7 @@ import threading
 import sys
 from ball_tracking_example.taskified import tasks
 
-'''
+
 config = {"IP": ["192.168.1.104", "192.168.1.101", "192.168.1.105", "192.168.1.102"],
 "bw": [["inf", "4969kbps", "inf", "inf"],
 ["4969kbps", "inf", "4091kbps", "1024kbps"],
@@ -26,7 +26,7 @@ def configure_bandwidth():
 		break
 
 
-#configure_bandwidth()
+configure_bandwidth()
 
 routing_list = {"IP_table": ["192.168.1.101", "192.168.1.105", "192.168.1.102"]}
 
@@ -41,7 +41,7 @@ def customize_routing(routing_list):
 
 
 #customize_routing(routing_list)
-'''
+
 
 def run_task(task_func, args):
 	#emulate_iot_device()

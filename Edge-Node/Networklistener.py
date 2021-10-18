@@ -34,7 +34,8 @@ def get_host_ip():
 
 def configure(cmd):
 	for c in cmd:
-		p = sp.Popen (c, stdout=sp.PIPE, stderr=sp.STDOUT, shell=True)
+		p = sp.Popen (c, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT, shell=True)
+		p.communicate(input=b'edgeimcl\n')
 		print (p.communicate () [0].decode ())
 		print ('if no error printed, then successfully configure the network bandwidth')
 
@@ -104,9 +105,10 @@ def customize_routing(routing_path_list):
 	#cmd1 = 'echo "1" > /proc/sys/net/ipv4/ip_forward'
 	cmd2 = 'sudo route add -host ' + routing_path_list[-1] + ' gw ' + routing_path_list[order+1]
 	#cmd = cmd1 + ' && ' + cmd2
-	p = sp.Popen (cmd2, stdout=sp.PIPE, stderr=sp.STDOUT, shell=True)
-	print (p.communicate () [0].decode ())
-	print ('if no error printed, then successfully configure next hop')
+	# p = sp.Popen (cmd2, stdout=sp.PIPE, stderr=sp.STDOUT, shell=True)
+	# print (p.communicate () [0].decode ())
+	# print ('if no error printed, then successfully configure next hop')
+	configure(cmd2)
 
 	return 0
 
