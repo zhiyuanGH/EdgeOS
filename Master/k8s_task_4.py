@@ -134,7 +134,8 @@ def server_task(client_ip, conn, previous_hops, next_clients, lock, task_id_list
 				next_task_args_list.append(next_arg)
 
 			# Set variables and args for running tasks
-			next_task_run_index = next_task_num
+			#next_task_run_index = next_task_num
+			next_task_run_index = task_id_list[0]
 			if len(next_task_args_list) == 0:
 				# No args to pass
 				next_task_args = None
