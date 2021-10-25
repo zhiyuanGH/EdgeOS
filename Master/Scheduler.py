@@ -1,4 +1,6 @@
+import json
 
+#parse the input json
 
 #profile the application (latency, energy consumption, .etc), can be done offline
 
@@ -12,7 +14,7 @@
 #execution configuration
 conf = 	{
 			"sub_task_1": {
-				"task_id": "0 1 2", 
+				"task_id": "0", 
 				"source_ip": "192.168.1.104", 
 				"source_ip_port": 8089, 
 				"next_hop": "192.168.1.104", 
@@ -21,7 +23,7 @@ conf = 	{
 				"routing": ""},
 
 			"sub_task_2": {
-				"task_id": "0 1 2", 
+				"task_id": "1", 
 				"source_ip": "192.168.1.104", 
 				"source_ip_port": 8089, 
 				"next_hop": "192.168.1.102", 
@@ -30,7 +32,16 @@ conf = 	{
 				"routing": ""},
 
 			"sub_task_3": {
-				"task_id": "0 1 2", 
+				"task_id": "2 3", 
+				"source_ip": "192.168.1.104", 
+				"source_ip_port": 8089, 
+				"next_hop": "192.168.1.104", 
+				"next_hop_port": 8089, 
+				"bandwidth": "", 
+				"routing": ""},
+
+			"sub_task_4": {
+				"task_id": "4", 
 				"source_ip": "192.168.1.104", 
 				"source_ip_port": 8089, 
 				"next_hop": "192.168.1.104", 
@@ -38,3 +49,13 @@ conf = 	{
 				"bandwidth": "", 
 				"routing": ""}
 		}
+
+
+
+def scheduling():
+	'''
+	input: node resources, network topology and bandwidth, task progile
+	output: the execution configuration
+	'''
+
+	return json.loads(conf)
