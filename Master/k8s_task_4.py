@@ -189,8 +189,6 @@ def server_task(client_ip, conn, previous_hops, next_clients, lock, task_id_list
 					for key, value in args_dict.items():
 						del value[0]
 
-					lock.release()
-
 					next_task_args = tuple(arg_group)
 					#send the parameters
 
@@ -211,6 +209,8 @@ def server_task(client_ip, conn, previous_hops, next_clients, lock, task_id_list
 						offload_to_peers(next_task_num=next_task_run_index,
 										next_task_args=next_task_args,
 										client_sockets=next_clients)
+
+				lock.release()
 
 
 
