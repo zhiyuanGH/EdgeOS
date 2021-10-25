@@ -338,7 +338,7 @@ def parse_args():
 
 args_dict = {}
 
-HOST = 'localhost'
+HOST = '0.0.0.0'
 #HOST_PORT = 8089
 
 #previous_hop = False
