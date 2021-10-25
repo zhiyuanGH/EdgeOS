@@ -177,10 +177,10 @@ def server_task(client_ip, conn, previous_hops, next_clients, lock, task_id_list
 				print(args_dict)
 
 				count = 0
-				arg_group = ()
+				arg_group = []
 				for key, value in args_dict.items():
 					if value:
-						arg_group += value[0]
+						arg_group.append(value[0])
 						count += 1
 
 				print(count)
@@ -191,7 +191,7 @@ def server_task(client_ip, conn, previous_hops, next_clients, lock, task_id_list
 
 					lock.release()
 
-					next_task_args = arg_group
+					next_task_args = tuple(arg_group)
 					#send the parameters
 
 					while next_task_run_index <= task_id_list[-1]:
