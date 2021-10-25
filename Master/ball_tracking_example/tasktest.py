@@ -1,6 +1,6 @@
 #start define subtasks
 
-nums = range(100)
+nums = list(range(100))
 
 def task_1(nums=nums):
 	num = nums.pop()

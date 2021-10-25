@@ -62,7 +62,7 @@ def offload_to_peers(next_task_num, next_task_args, client_sockets):
 	#use multiple process to transmit the args
 	p = Pool(3)
 	for client_socket in client_sockets:
-		p.apply_async(offload_to_peer, args=(next_task_num, num_next_task_args, client_socket))
+		p.apply_async(offload_to_peer, args=(next_task_num, next_task_args, client_socket))
 	print("all sending subprocess starts")
 	p.close()
 	p.join()
@@ -82,13 +82,13 @@ def server_socket(s,previous_hops,next_clients,lock, task_id_list):
 
 		# Start a new thread for the client. Use daemon threads to make exiting the server easier
 		# Set a unique name to display all images
-		t = threading.Thread(target=server_task, args=[client_port, client_socket, previous_hops, next_clients, lock, task_id_list], daemon=True)
+		t = threading.Thread(target=server_task, args=[client_ip, client_socket, previous_hops, next_clients, lock, task_id_list], daemon=True)
 		t.setName(str(client_ip) + ':' + str(client_port))
 		t.start()
 		print('Started thread with name:', t.getName())
 
 
-def server_task(client_port, conn, previous_hops, next_clients, lock, task_id_list):
+def server_task(client_ip, conn, previous_hops, next_clients, lock, task_id_list):
 	data = b''
 	payload_size = struct.calcsize("L")
 
@@ -162,14 +162,19 @@ def server_task(client_port, conn, previous_hops, next_clients, lock, task_id_li
 					#transmit to one or multiple clients
 					offload_to_peers(next_task_num=next_task_run_index,
 									next_task_args=next_task_args,
-									client_socket=next_clients)
+									client_sockets=next_clients)
 			else:
 				#multiple clients send the parameters, aggregate the parameters
 				lock.acquire()
+				print("get lock")
 				global args_dict
 
-				if client_port in previous_hops:
-					args_dict[client_port].append(next_task_args)
+				if client_ip in previous_hops:
+					print(client_ip)
+					print(next_task_args)
+					args_dict[client_ip].append(next_task_args)
+
+				print(args_dict)
 
 				count = 0
 				arg_group = ()
@@ -178,6 +183,7 @@ def server_task(client_port, conn, previous_hops, next_clients, lock, task_id_li
 						arg_group += value[0]
 						count += 1
 
+				print(count)
 				if count == len(previous_hops):
 					#pop the first element 
 					for key, value in args_dict.items():
@@ -204,7 +210,7 @@ def server_task(client_port, conn, previous_hops, next_clients, lock, task_id_li
 						#transmit to one or multiple clients
 						offload_to_peers(next_task_num=next_task_run_index,
 										next_task_args=next_task_args,
-										client_socket=next_clients)
+										client_sockets=next_clients)
 
 
 
@@ -222,7 +228,7 @@ def main(previous_hops, HOST_PORT, next_hops, next_hop_ports, task_id_list):
 	if next_hops:
 		#establish next hop connection
 		client_sockets = []
-		for (next_hop, next_hop_port) in (next_hops, next_hop_ports):
+		for (next_hop, next_hop_port) in zip(next_hops, next_hop_ports):
 			client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			client_socket.connect((next_hop, next_hop_port))
 
@@ -246,7 +252,7 @@ def main(previous_hops, HOST_PORT, next_hops, next_hop_ports, task_id_list):
 		server.listen(10)
 		print('Socket now listening on port', HOST_PORT)
 
-		server_socket(s=server, previous_hops=previous_hops, next_client=client_sockets, lock=lock, task_id_list=task_id_list)
+		server_socket(s=server, previous_hops=previous_hops, next_clients=client_sockets, lock=lock, task_id_list=task_id_list)
 
 	else:
 		# Variables for task state
@@ -279,9 +285,9 @@ def main(previous_hops, HOST_PORT, next_hops, next_hop_ports, task_id_list):
 
 				if to_continue is not False and client_sockets is not None:
 					# Send frame to peer server
-					offload_to_peer(next_task_num=task_index,
+					offload_to_peers(next_task_num=task_index,
 									next_task_args=next_task_args,
-									client_socket=client_sockets)
+									client_sockets=client_sockets)
 
 				# Reset vars
 				task_index = 0
@@ -294,12 +300,12 @@ def parse_args():
 
 	# Parse previous hop 1/0
 	para_1 = str(sys.argv[1])
-	print(para_1)
+	#print(para_1)
 	if para_1 == ' ':
 		previous_hops = False
 	else:
-		#previous_hops = para_1.split()
-		previous_hops = list(map(int, para_1.split()))
+		previous_hops = para_1.split()
+		#previous_hops = list(map(int, para_1.split()))
 
 	#parse localhost port
 	para_2 = str(sys.argv[2])
@@ -311,16 +317,16 @@ def parse_args():
 	# Parse next hop ip_address
 	para_3 = str(sys.argv[3])
 	if para_3 == ' ':
-		next_hop = False
+		next_hops = False
 	else:
-		next_hop = para_3.split()
+		next_hops = para_3.split()
 
 	#parse next hop port
 	para_4 = str(sys.argv[4])
 	if para_4 == ' ':
-		next_hop_port = False
+		next_hop_ports = False
 	else:
-		next_hop_port = list(map(int, para_4.split()))
+		next_hop_ports = list(map(int, para_4.split()))
 
 	# Parse task_id_list  '0 1 2 3' -- [0 1 2 3]
 	para_5 = str(sys.argv[5])
